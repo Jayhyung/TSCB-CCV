@@ -106,7 +106,6 @@ else {
     mata: st_local("se_cl", strofreal(se_cl))
 
     // adjust for qk<1 OLS
-    mata: cluster_V=1
     mata: ccv = ccv:*`qk' :+ (1-`qk')*cluster_V
     mata: se = sqrt((1/`reps')*sum(ccv))/sqrt(Ntot)
     mata: st_local("se", strofreal(se))
