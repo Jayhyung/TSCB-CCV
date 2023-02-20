@@ -4,6 +4,7 @@
 
 /*
 Versions: 0.0.1 november14 - add if/in and create unique id in ccv
+Versions: 0.0.2 november21 - add FE option and return results
 */
 
 
@@ -19,6 +20,7 @@ version 13.0
         [
             seed(numlist integer >0 max=1)
             reps(integer 4)
+            fe
         ];
 #delimit cr
 tokenize `varlist'
@@ -38,54 +40,128 @@ qui egen `M' = group(`3') if `touse'
 cap set seed `seed'
 qui putmata data = (`1' `2' `M') if `touse', replace
 mata: ccv=J(`reps',1,.)
-
-// calculate tau FE
-mata: fe = FE(data[,1], data[,2], data[,3])
 mata: Wbar = mean(data[,2])
-
-// robust and cluster se FE
 mata: Ntot = rows(data)
-mata: tildes = auxsum(data[,1], data[,2], data[,3], fe)
-mata: rFE_V = Ntot*(tildes[1,1]/tildes[3,1]^2)
-mata: clusterFE_V = Ntot*(tildes[2,1]/tildes[3,1]^2)
-mata: Mk = rows(uniqrows(data[,3]))
-mata: lambdak = 1 - `qk'*((tildes[4,1]/Mk)^2/(tildes[5,1]/Mk))
-mata: CCV_FE_V = lambdak*clusterFE_V + (1 - lambdak)*rFE_V
-mata: ccv_se_fe = sqrt(CCV_FE_V)/sqrt(Ntot)
-mata: st_local("ccv_se_fe", strofreal(ccv_se_fe))
 
-dis "Causal Cluster Variance with (`reps') sample splits."
-dis "----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5"
+*-------------------------------------------------------------------------------
+*--- (1.1) FE
+*-------------------------------------------------------------------------------
+if "`fe'"=="fe" {
+    // calculate tau FE
+    mata: b = FE(data[,1], data[,2], data[,3])
+    mata: st_local("b", strofreal(b))
 
-forval i=1/`reps' {
-    display in smcl "." _continue
-    if mod(`i',50)==0 dis "     `i'"
+    // robust and cluster SE FE
+    mata: tildes = auxsum(data[,1], data[,2], data[,3], b)
+    mata: r_V = Ntot*(tildes[1,1]/tildes[3,1]^2)
+    mata: se_r = sqrt(r_V)/sqrt(Ntot)
+    mata: st_local("se_r", strofreal(se_r))
+    mata: cluster_V = Ntot*(tildes[2,1]/tildes[3,1]^2)
+    mata: se_cl = sqrt(cluster_V)/sqrt(Ntot)
+    mata: st_local("se_cl", strofreal(se_cl))
+
+    // adjust for qk<1 OLS
+    mata: Mk = rows(uniqrows(data[,3]))
+    mata: lambdak = 1 - `qk'*((tildes[4,1]/Mk)^2/(tildes[5,1]/Mk))
+    mata: ccv = lambdak*cluster_V + (1 - lambdak)*r_V
+    mata: se = sqrt(ccv)/sqrt(Ntot)
+    mata: st_local("se", strofreal(se))
 	
-    tempvar split
-    qui gen `split' = runiform()<=0.5 if `touse'
-    qui putmata split = (`split') if `touse', replace
-    mata: ccv[`i',1]=CCV(data[,1], data[,2], data[,3], split, `pk', `qk')
+    mata: Rsq = 1-(tildes[6,1]/sum((data[,1]:-mean(data[,1])):^2))
+    mata: st_local("Rsq", strofreal(Rsq))
 }
 
-// adjust for qk<1
-mata: ccv = ccv:*`qk' :+ (1-`qk')*clusterFE_V
+*-------------------------------------------------------------------------------
+*--- (1.1) OLS
+*-------------------------------------------------------------------------------
+else {
 
-mata: n=rows(data)
-mata: ccv_se = sqrt((1/`reps')*sum(ccv))/sqrt(n)
-mata: st_local("ccv_se", strofreal(ccv_se))
+    dis "Causal Cluster Variance with (`reps') sample splits."
+    dis "----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5"
 
-ereturn scalar se_ols = `ccv_se' 
-ereturn scalar se_fe = `ccv_se_fe' 
+    forval i=1/`reps' {
+        display in smcl "." _continue
+        if mod(`i',50)==0 dis "     `i'"
+	
+        tempvar split
+        qui gen `split' = runiform()<=0.5 if `touse'
+        qui putmata split = (`split') if `touse', replace
+        mata: ccv[`i',1]=CCV(data[,1], data[,2], data[,3], split, `pk', `qk')
+    }
+
+    // robust SE OLS
+    mata: wbar_factor = (Wbar^2)*(1-Wbar)^2
+    mata: alpha = sum(data[,1]:*(1:-data[,2]))/sum(1:-data[,2])
+    mata: b = sum(data[,1]:*(data[,2]))/sum(data[,2]) - alpha
+    mata: Uhat = data[,1] :- alpha :- data[,2]:*b
+    mata: r_V = mean((Uhat:^2 :* (data[,2]:-Wbar):^2))/wbar_factor
+    mata: se_r = sqrt(r_V)/sqrt(Ntot)
+    mata: st_local("se_r", strofreal(se_r))
+    mata: st_local("b", strofreal(b))
+
+    // cluster SE OLS
+    mata: cluster_V = cluster_SE(Uhat, data[,2], data[,3], Wbar)
+    mata: cluster_V = cluster_V/(Ntot*wbar_factor)
+    mata: se_cl = sqrt(cluster_V)/sqrt(Ntot)
+    mata: st_local("se_cl", strofreal(se_cl))
+
+    // adjust for qk<1 OLS
+    mata: cluster_V=1
+    mata: ccv = ccv:*`qk' :+ (1-`qk')*cluster_V
+    mata: se = sqrt((1/`reps')*sum(ccv))/sqrt(Ntot)
+    mata: st_local("se", strofreal(se))
+	
+    mata: Rsq = 1-(sum(Uhat:^2)/sum((data[,1]:-mean(data[,1])):^2))
+    mata: st_local("Rsq", strofreal(Rsq))
+}
+
+*-------------------------------------------------------------------------------
+* (2) Return output
+*-------------------------------------------------------------------------------
+// mata to stata
+mata: st_local("Ntot", strofreal(Ntot))
+mata: st_matrix("b", b)
+
+// output
+matrix V = `se'^2
+matrix colnames b = `2' 
+matrix rownames b = `1'
+matrix colnames V = `2'
+matrix rownames V = `2'
+ereturn post b V, depname(`1') obs(`Ntot')
+
+local zr = `b'/`se_r'
+local zc = `b'/`se_cl'
+local pr = 2 * (1-normal(abs(`zr')))
+local pc = 2 * (1-normal(abs(`zc')))
+local lci_r = `b'+invnormal(0.025)*`se_r'
+local uci_r = `b'+invnormal(0.975)*`se_r'
+local lci_c = `b'+invnormal(0.025)*`se_cl'
+local uci_c = `b'+invnormal(0.975)*`se_cl'
+
+if "`fe'"=="" local title "OLS regression with Causal Cluster Variance"
+else          local title "Fixed effect regression with Causal Cluster Variance"
 
 di as text ""
-di as text "Causal Cluster Variance (CCV):" 
-di as text "OLS" as result %9.5f `ccv_se'
-di as text "FE " as result %9.5f `ccv_se_fe'
+di as text "`title'"
+di as text "                                                Number of obs     = " as result %10.0fc `Ntot'
+di as text "                                                R-squared         =  " as result  %9.4f `Rsq'
+di as text ""
+ereturn display, plus cformat(%9.7f)
+di as text " Robust SE   {c |}             " as result %9.7f `se_r'  "" as result %9.2f `zr' as result %8.3f `pr' "    " as result %9.7f `lci_r' "   " as result %9.7f `uci_r'
+di as text " Cluster SE  {c |}             " as result %9.7f `se_cl' "" as result %9.2f `zc' as result %8.3f `pc' "    " as result %9.7f `lci_c' "   " as result %9.7f `uci_c'
+di as text "{hline 13}{c BT}{hline 64}"
+
+ereturn clear
+ereturn scalar se_ccv     = `se' 
+ereturn scalar se_robust  = `se_r' 
+ereturn scalar se_cluster = `se_cl' 
+ereturn scalar beta = `b'
 
 end
 
 *-------------------------------------------------------------------------------
-*--- (2) Mata functions
+*--- (3) Mata functions
 *-------------------------------------------------------------------------------
 mata: 
 real scalar CCV(vector Y, vector W, vector M, vector u, scalar pk, scalar qk) {
@@ -108,7 +184,7 @@ real scalar CCV(vector Y, vector W, vector M, vector u, scalar pk, scalar qk) {
         u_m = select(u,cond)
         Nm = rows(y)
         ncount = ncount + Nm
-
+		
         if (variance(vec(w))==0) {
             tau_ms[m,1] = tau
             tau_full_ms = tau_full
@@ -120,7 +196,7 @@ real scalar CCV(vector Y, vector W, vector M, vector u, scalar pk, scalar qk) {
 		
         aux_pk = Nm*((tau_full_ms - tau)^2)
         pk_term = pk_term + aux_pk
-    }
+    }	
     // Calculate residual
     resU = Y :- alpha :- W:*tau
     // Wbar
@@ -177,7 +253,8 @@ real matrix auxsum(vector Y, vector W, vector M, scalar fe) {
     sum_tildeU_FE = 0
     num_lambdak = 0
     den_lambdak = 0
-    T = J(5,1,.)
+    sum_res = 0
+    T = J(6,1,.)
 	
     uniqM = uniqrows(M)
     NM = rows(uniqM)
@@ -195,14 +272,34 @@ real matrix auxsum(vector Y, vector W, vector M, scalar fe) {
 		
         num_lambdak = num_lambdak + Wmbar*(1-Wmbar)
         den_lambdak = den_lambdak + (Wmbar^2)*((1-Wmbar)^2)
+		
+        sum_res = sum_res + sum((Utilde:^2))
     }
-	
+	extrasum
     T[1,1] = sum_tildeU
     T[2,1] = sum_tildeU_FE
     T[3,1] = sum_tildeW
     T[4,1] = num_lambdak
     T[5,1] = den_lambdak
+    T[6,1] = sum_res
     return(T)
 }
 end
+
+mata: 
+real scalar cluster_SE(vector Uhat, vector W, vector M, scalar Wbar) {
+    uniqM = uniqrows(M)
+    NM = rows(uniqM)
+    cluster_SE = 0
+    for(m=1;m<=NM;++m) {
+        cond = M:==uniqM[m]
+        uhat = select(Uhat,cond)
+        w = select(W,cond)
+        err = sum(uhat :* (w :- Wbar))^2
+        cluster_SE = cluster_SE + err
+    }
+    return(cluster_SE)
+}
+end
+
 
