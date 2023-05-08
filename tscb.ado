@@ -38,6 +38,31 @@ if mod(`qm',1)!=0 {
     di as text "1/q is not an integer, so we expand the data by `f' or `qm' for each cluster"
 }
 
+//CHECK IF TREATMENT IS BINARY
+qui sum `2'
+local t_error = 0
+if r(min)!=0 | r(max)!=1 {
+    local t_error = 1
+}
+else {
+    qui levelsof `2'
+    if r(r)!=2 local t_error=1
+}
+if `t_error'==1 {
+    dis as error "Please ensure that treatment variable `2' is binary."
+    exit 222
+}
+
+//CHECK IF THERE IS VARIATION IN TREATMENT WITHIN EACH GROUP
+tempvar M
+qui bys `3': egen `M' = mean(`2') if `touse'
+qui sum `M' if `touse'
+if r(min)==0 | r(max)==1 {
+    di as error "Not all clusters have variance in treatment."
+    di as error "Please ensure that treatment variable `2' has within-cluster variation"
+    exit 222
+}
+
 *------------------------------------------------------------------------------*
 * (1) Run TSCB
 *------------------------------------------------------------------------------*
@@ -205,14 +230,21 @@ local uci_c = `b'+invnormal(0.975)*`se_cl'
 if "`fe'"=="fe" local title "Fixed effect regression with Two-Stage Cluster Bootstrap Variance"
 else            local title "OLS regression with Two-Stage Cluster Bootstrap Variance"
 
+local spaces "                                                "
+
 di as text ""
 di as text "`title'"
-di as text "                                                Number of obs     = " as result %10.0fc `Ntot'
-di as text "                                                R-squared         =  " as result  %9.4f `Rsq'
+di as text "`spaces'Number of obs     = " as result %10.0fc `Ntot'
+di as text "`spaces'R-squared         =  " as result  %9.4f `Rsq'
 di as text ""
 ereturn display, plus cformat(%9.7f)
-di as text " Robust SE   {c |}             " as result %9.7f `se_r'  "" as result %9.2f `zr' as result %8.3f `pr' "    " as result %9.7f `lci_r' "   " as result %9.7f `uci_r'
-di as text " Cluster SE  {c |}             " as result %9.7f `se_cl' "" as result %9.2f `zc' as result %8.3f `pc' "    " as result %9.7f `lci_c' "   " as result %9.7f `uci_c'
+di as text " Robust SE   {c |}             " as result %9.7f `se_r'  "" _continue
+di as result %9.2f `zr' as result %8.3f `pr' "    "                     _continue
+di as result %9.7f `lci_r' "  " as result %9.7f `uci_r'
+
+di as text " Cluster SE  {c |}             " as result %9.7f `se_cl' "" _continue
+di as result %9.2f `zc' as result %8.3f `pc' "    "                     _continue
+di as result %9.7f `lci_c' "   " as result %9.7f `uci_c'
 di as text "{hline 13}{c BT}{hline 64}"
 
 ereturn clear
