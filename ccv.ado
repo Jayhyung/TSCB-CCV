@@ -31,8 +31,35 @@ tokenize `varlist'
 tempvar touse
 mark `touse' `if' `in'
 
+//CHECK IF TREATMENT IS BINARY
+qui sum `2'
+local t_error = 0
+if r(min)!=0 | r(max)!=1 {
+    local t_error = 1
+}
+else {
+    qui levelsof `2'
+    if r(r)!=2 local t_error=1
+}
+if `t_error'==1 {
+    dis as error "Please ensure that treatment variable `2' is binary."
+    exit 222
+}
+//else dis "Binary check passing"
+
+//CHECK IF THERE IS VARIATION IN TREATMENT WITHIN EACH GROUP
 tempvar M
-qui egen `M' = group(`3') if `touse'
+qui bys `3': egen `M' = mean(`2') if `touse'
+qui sum `M' if `touse'
+if r(min)==0 | r(max)==1 {
+    di as error "Not all clusters have variance in treatment."
+    di as error "Please ensure that treatment variable `2' has within-cluster variation"
+    exit 222
+}
+//else dis "Within-cluster variance test passing"
+
+
+
 
 *-------------------------------------------------------------------------------
 *--- (1) Run CCV
@@ -141,14 +168,20 @@ local uci_c = `b'+invnormal(0.975)*`se_cl'
 if "`fe'"=="" local title "OLS regression with Causal Cluster Variance"
 else          local title "Fixed effect regression with Causal Cluster Variance"
 
+local spaces "                                                "
+
 di as text ""
 di as text "`title'"
-di as text "                                                Number of obs     = " as result %10.0fc `Ntot'
-di as text "                                                R-squared         =  " as result  %9.4f `Rsq'
+di as text "`spaces'Number of obs     = " as result %10.0fc `Ntot'
+di as text "`spaces'R-squared         =  " as result  %9.4f `Rsq'
 di as text ""
 ereturn display, plus cformat(%9.7f)
-di as text " Robust SE   {c |}             " as result %9.7f `se_r'  "" as result %9.2f `zr' as result %8.3f `pr' "    " as result %9.7f `lci_r' "   " as result %9.7f `uci_r'
-di as text " Cluster SE  {c |}             " as result %9.7f `se_cl' "" as result %9.2f `zc' as result %8.3f `pc' "    " as result %9.7f `lci_c' "   " as result %9.7f `uci_c'
+di as text " Robust SE   {c |}             " as result %9.7f `se_r'  "" _continue
+di as result %9.2f `zr' as result %8.3f `pr' " "                        _continue
+di as result %9.7f `lci_r' "   " as result %9.7f `uci_r'
+di as text " Cluster SE  {c |}             " as result %9.7f `se_cl' "" _continue
+di as result %9.2f `zc' as result %8.3f `pc' "    "                     _continue
+di as result %9.7f `lci_c' "   " as result %9.7f `uci_c'
 di as text "{hline 13}{c BT}{hline 64}"
 
 ereturn clear
@@ -165,7 +198,8 @@ end
 mata: 
 real scalar CCV(vector Y, vector W, vector M, vector u, scalar pk, scalar qk) {
     // u is split variable: 1 if estimation, 0 if calculate    
-    //Calculate alpha and tau for split 1 [NEED TO CONFIRM IF FASTER TO JUST SELECT SUB-VECTORS!]
+    //Calculate alpha and tau for split 1
+    //[NEED TO CONFIRM IF FASTER TO JUST SELECT SUB-VECTORS!]
     alpha = sum(Y:*(1:-W):*(1:-u))/sum((1:-W):*(1:-u))
     tau = sum(Y:*(W):*(1:-u))/sum((W):*(1:-u)) - alpha
     // Calculate tau for full sample
@@ -189,7 +223,8 @@ real scalar CCV(vector Y, vector W, vector M, vector u, scalar pk, scalar qk) {
             tau_full_ms = tau_full
         }
         else {
-            tau_ms[m,1] = sum(y:*(w):*(1:-u_m))/sum((w):*(1:-u_m)) - sum(y:*(1:-w):*(1:-u_m))/sum((1:-w):*(1:-u_m))
+            tau_ms[m,1] = sum(y:*(w):*(1:-u_m))/sum((w):*(1:-u_m)) -
+                          sum(y:*(1:-w):*(1:-u_m))/sum((1:-w):*(1:-u_m))
             tau_full_ms = sum(y:*(w))/sum(w) - sum(y:*(1:-w))/sum(1:-w)
         }
 		
