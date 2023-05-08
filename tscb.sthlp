@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{opt tscb} {opt depvar} {opt treatment} {opt groupvar} {ifin}{cmd:,} {it:qk()} [{it:options}]
+{opt tscb} {opt depvar} {opt treatment} {opt groupvar} {ifin}{cmd:,} {it:qk(#)} [{it:options}]
 
 {synoptset 29 tabbed}{...}
 {synopthdr}
@@ -28,7 +28,27 @@
 {pstd}
 
 {pstd}
- {cmd:tscb} implements the Two-Stage Cluster Bootstrap Estimator (TSCB) {help tscb##TSCB:Abadie et al. (2022)}. The TSCB work in two stages. First, the fraction treated for each cluster is drawn from empirical distribution of cluster-specific treatment fraction. Second, we samples the treated and control units from each cluster, with their number of units determined in the first stage. The algorithm is explained in detail in {help tscb##TSCB:Abadie et al. (2022)}.
+ {cmd:tscb} implements the Two-Stage Cluster Bootstrap Estimator (TSCB), a bootstrap variance
+ estimator proposed by {help tscb##TSCB:Abadie et al. (2022)}, for models where average treated
+ effects are desired, and where standard error estimates need to account for clustering.
+ The TSCB is a variance estimate which considers both the standard sampling component which
+ induces variance in estimated regression coefficients, but also incorporates a design-based
+ component, accounting for variability in estimates owing to treatment assignment mechanisms.
+ When the data which is used to estimate treatment effects includes an important proportion of
+ clusters in the full population, standard cluster-robust standard errors can be significantly
+ inflated, and the CCV produces a correction for this.
+{p_end}
+
+{pstd}
+The TSCB work in two stages. First, the fraction treated for each cluster is drawn from empirical distribution of cluster-specific treatment fraction. Second, we samples the treated and control units from each cluster, with their number of units determined in the first stage. The algorithm is explained in detail in {help tscb##TSCB:Abadie et al. (2022)}.
+{p_end}
+
+{pstd}
+  The {cmd:tscb} command is closely related to the {cmd:ccv} (Causal Cluster
+   Variance) command.  {cmd:ccv}
+   (provided that it is installed) implements an analytic version of the cluster
+   variance formula of {help tscb##TSCB:Abadie et al. (2022)}, and shares quite a
+   similar syntax and logic.
 {p_end}
 
 
@@ -85,7 +105,8 @@
 {title:References}
 
 {marker TSCB}{...}
-{phang} Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge. 2022. {browse "https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjac038/6750017?redirectedFrom=fulltext&login=false":{it:When Should You Adjust Standard Errors for Clustering?}.} The Quarterly Journal of Economics.
+{phang} Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge. 2022.
+{browse "https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjac038/6750017?redirectedFrom=fulltext&login=false":{it:When Should You Adjust Standard Errors for Clustering?}.} The Quarterly Journal of Economics.
 {p_end}
 
 
