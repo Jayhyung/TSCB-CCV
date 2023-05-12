@@ -29,27 +29,31 @@
 {pstd}
 
 {pstd}
- {cmd:ccv} implements the Causal Cluster Variance (CCV) an analytic variance formula
+ {cmd:ccv} implements the Causal Cluster Variance (CCV) an analytic variance estimator
  proposed by {help ccv##CCV:Abadie et al. (2022)} for models where average treatment
  effects are desired, and where standard error estimates wish to account for clustering.
  The CCV is a variance estimate which considers both the standard sampling component
  which induces variance in estimated regression coefficients, but also incorporates
  a design-based component, accounting for variability in estimates owing to treatment
- assignment mechanisms.  When the data which is used to estimate treatment effects
- includes an important proportion of clusters in the full population, standard
- cluster-robust standard errors can be significantly inflated, and the CCV provides
- a correction for this.
+ assignment mechanisms (treatment variation between clusters).  This design-based
+ component implies that the variance estimate is made with respects to the finite
+ population which a researcher is interested in studying, rather than infinite
+ data generating processes (DGPs) of this population. When the data which is used to estimate
+ treatment effects includes an important proportion of clusters in the full population,
+ standard cluster-robust standard errors conceptualized for infinite realizations of
+ DGPs can be substantially larger than CCV versions of these standard errors, which explicitly
+ account for clustered treatment assignment and treatment effect variation across clusters.
 {p_end}
 
 {pstd}
   Following the details laid out fully in {help ccv##CCV:Abadie et al. (2022)}, the CCV is 
-  suitable for OLS regressions of an outcome on a single treatment variable, or
-  for OLS regressions of an outcome variable on a single treatment variable, as well
-  as unit fixed effects.  The estimation of the variance requires estimating various
+  suitable for OLS regressions of an outcome on a single (binary) treatment variable, or
+  for OLS regressions of an outcome variable on a single (binary) treatment variable, as
+  well as unit fixed effects.  The estimation of the variance requires estimating various
   sub-components, including both residuals and between-cluster variation in
   treatment effects, and if these are estimated on the full sample, correlations between
   estimation errors of sub-components generates biases.  As such, sample splits are
-  conducted within which separate components are estimated.
+  conducted on data, and these separate variance components are estimaed in different samples.
 {p_end}
 
 {pstd}
@@ -91,7 +95,9 @@ required option.
 {pstd}
 {p_end}
  {phang}
-{opt seed}({it:#}) seed define for pseudo-random numbers.
+{opt seed}({it:#}) seed define for pseudo-random numbers. This ensures that variance
+estimates can be replicated exactly, despite that fact that certain components are
+estimated off of (random) splits to the sample.
 
 {pstd}
 {p_end}
