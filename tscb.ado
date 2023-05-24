@@ -45,7 +45,7 @@ if r(min)!=0 | r(max)!=1 {
     local t_error = 1
 }
 else {
-    qui levelsof `2'
+    qui tab `2'
     if r(r)!=2 local t_error=1
 }
 if `t_error'==1 {
