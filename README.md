@@ -5,6 +5,11 @@
 ## TSCB: Two-Stage Cluster Bootstrap
 [tscb.ado](tscb.ado) - A post estimation program to compute the standard error for OLS and FE estimators. We consider the case when $q_k=1$ and $\frac{1}{q_k}=c$ where $c$ can take integer or non-integer values. We follow algorithm 1 of [Abadie et al (2022)](#references).
 
+To install directly into Stata:
+```s
+net install tscb, from("https://raw.githubusercontent.com/daniel-pailanir/tscb-ccv/master") replace
+```
+
 ### Syntax
 ```s
 tscb Y W M [if] [in], qk() seed() reps()
@@ -36,6 +41,11 @@ FE   0.00144
 
 ## CCV: Causal Cluster Variance
 [ccv.ado](ccv.ado) - A program to compute the standard error for OLS and FE estimators. 
+
+To install directly into Stata:
+```s
+net install ccv, from("https://raw.githubusercontent.com/daniel-pailanir/tscb-ccv/master") replace
+```
 
 ### Syntax
 ```s
