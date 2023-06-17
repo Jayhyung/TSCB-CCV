@@ -136,7 +136,51 @@ estimated off of (random) splits to the sample.
 {marker examples}{...}
 {title:Examples}
 
+{pstd}
+Load data from 1% extract from 2000 US Census (20-50 years old) Abadie et al., (2020).
+
+{pstd}
+ . {stata webuse set www.damianclarke.net/stata/}
  
+{pstd}
+ . {stata webuse "census2000_1pc.dta", clear}
+ 
+{pstd}
+Run regression without FE.
+
+{pstd}
+ . {stata ccv ln_earnings college state, pk(0.01) qk(1)}
+ 
+{pstd}
+Using FE at state level.
+
+{pstd}
+ . {stata ccv ln_earnings college state, fe pk(0.01) qk(1)}
+ 
+{pstd}
+Over another dependent variable.
+
+{pstd}
+ . {stata ccv hours college state, pk(0.01) qk(1)}
+
+{pstd}
+Using FE at state level.
+
+{pstd}
+ . {stata ccv hours college state, fe pk(0.01) qk(1)}
+ 
+{pstd}
+Using a bigger sample at 5 percent.
+
+{pstd}
+ . {stata webuse "census2000_5pc.dta", clear}
+ 
+{pstd}
+ . {stata ccv ln_earnings college state, pk(0.05) qk(1)}
+
+{pstd}
+ . {stata ccv ln_earnings college state, fe pk(0.05) qk(1)}
+
 {marker references}{...}
 {title:References}
 
