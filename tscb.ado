@@ -240,7 +240,7 @@ di as text ""
 ereturn display, plus cformat(%9.7f)
 di as text " Robust SE   {c |}             " as result %9.7f `se_r'  "" _continue
 di as result %9.2f `zr' as result %8.3f `pr' "    "                     _continue
-di as result %9.7f `lci_r' "  " as result %9.7f `uci_r'
+di as result %9.7f `lci_r' "   " as result %9.7f `uci_r'
 
 di as text " Cluster SE  {c |}             " as result %9.7f `se_cl' "" _continue
 di as result %9.2f `zc' as result %8.3f `pc' "    "                     _continue
