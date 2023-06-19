@@ -19,10 +19,12 @@ Where Y is an outcome variable, W a binary treatment variable and M a variable i
 
 ### OLS and FE
 ```s
-use "data.dta"
+webuse set www.damianclarke.net/stata/
+
+webuse "census2000_5pc.dta", clear
 
 * run TSCB
-tscb Y W statenumber, qk(1) seed(2022) reps(150)
+tscb ln_earnings college state, qk(1) seed(2022) reps(150)
 ```
 The code returns the following results
 
