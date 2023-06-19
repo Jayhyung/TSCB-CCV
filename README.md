@@ -17,7 +17,7 @@ tscb Y W M [if] [in], qk() seed() reps()
 
 Where Y is an outcome variable, W a binary treatment variable and M a variable indicating the cluster. We provide an example using the data availble from the paper:
 
-### OLS and FE
+### OLS Estimates 
 ```s
 webuse set www.damianclarke.net/stata/
 
@@ -35,9 +35,18 @@ Two-Stage Cluster Bootstrap replications (150).
 ..................................................     100
 ..................................................     150
 
-Two-Stage Cluster Bootstrap (TSCB):
-OLS  0.00362
-FE   0.00144
+OLS regression with Two-Stage Cluster Bootstrap Variance
+                                                Number of obs     =  2,632,838
+                                                R-squared         =     0.0567
+
+------------------------------------------------------------------------------
+ ln_earnings |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     college |  0.4656426  0.0034122   136.46   0.000    0.4589548   0.4723304
+-------------+----------------------------------------------------------------
+ Robust SE   |             0.0011619   400.76   0.000    0.4633653   0.4679199
+ Cluster SE  |             0.0268800    17.32   0.000    0.4129588   0.5183264
+------------------------------------------------------------------------------
 ```
 
 
@@ -56,12 +65,14 @@ ccv Y W M [if] [in], qk() pk() seed() reps()
 
 Where Y is an outcome variable, W a binary treatment variable and M a variable indicating the cluster. We provide an example using the data availble from the paper:
 
-### OLS and FE
+### OLS Estimates
 ```s
-use "data.dta"
+webuse set www.damianclarke.net/stata/
+
+webuse "census2000_5pc.dta", clear
 
 * run CCV
-ccv Y W statenumber, qk(1) pk(1) seed(2022) reps(8)
+ccv ln_earnings college state, pk(0.05) qk(1) seed(2022) reps(8)
 ```
 The code returns the following results
 
@@ -69,12 +80,21 @@ The code returns the following results
 Causal Cluster Variance with (8) sample splits.
 ----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
 ........
-Causal Cluster Variance (CCV):
-OLS  0.00355
-FE   0.00138
+OLS regression with Causal Cluster Variance
+                                                Number of obs     =  2,632,838
+                                                R-squared         =     0.0567
+
+------------------------------------------------------------------------------
+ ln_earnings |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     college |  0.4656426  0.0035393   131.56   0.000    0.4587057   0.4725795
+-------------+----------------------------------------------------------------
+ Robust SE   |             0.0011619   400.76   0.000    0.4633653   0.4679199
+ Cluster SE  |             0.0268800    17.32   0.000    0.4129588   0.5183264
+------------------------------------------------------------------------------
 ```
 
 ## References
-**When Should You Adjust Standard Errors for Clustering?**, Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge, The Quarterly Journal of Economics, 2022.
+**When Should You Adjust Standard Errors for Clustering?**, Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge, The Quarterly Journal of Economics, 138(1):1-35, 2023.
 
 
