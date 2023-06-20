@@ -15,6 +15,7 @@
 {synopthdr}
 {synoptline}
 {synopt :{opt qk}({it:#})} proportion of cluster from population.{p_end}
+{synopt :{opt fe}} indicates that a fixed effects model is desired.{p_end}
 {synopt :{opt seed}({it:#})} set random-number seed to #.{p_end}
 {synopt :{opt reps}({it:#})} repetitions for bootstrap.{p_end}
 {pstd}
@@ -29,7 +30,7 @@
 
 {pstd}
  {cmd:tscb} implements the Two-Stage Cluster Bootstrap Estimator (TSCB), a bootstrap variance
- estimator proposed by {help tscb##TSCB:Abadie et al. (2022)}, for models where average treated
+ estimator proposed by {help tscb##TSCB:Abadie et al. (2023)}, for models where average treated
  effects are desired, and where standard error estimates need to account for clustering.
  The TSCB is a variance estimate which considers both the standard sampling component which
  induces variance in estimated regression coefficients, but also incorporates a design-based
@@ -40,14 +41,14 @@
 {p_end}
 
 {pstd}
-The TSCB work in two stages. First, the fraction treated for each cluster is drawn from empirical distribution of cluster-specific treatment fraction. Second, we samples the treated and control units from each cluster, with their number of units determined in the first stage. The algorithm is explained in detail in {help tscb##TSCB:Abadie et al. (2022)}.
+The TSCB work in two stages. First, the fraction treated for each cluster is drawn from empirical distribution of cluster-specific treatment fraction. Second, we samples the treated and control units from each cluster, with their number of units determined in the first stage. The algorithm is explained in detail in {help tscb##TSCB:Abadie et al. (2023)}.
 {p_end}
 
 {pstd}
   The {cmd:tscb} command is closely related to the {cmd:ccv} (Causal Cluster
    Variance) command.  {cmd:ccv}
-   (provided that it is installed) implements an analytic version of the cluster
-   variance formula of {help tscb##TSCB:Abadie et al. (2022)}, and shares quite a
+   (if installed) implements an analytic version of the cluster
+   variance formula of {help tscb##TSCB:Abadie et al. (2023)}, and shares quite a
    similar syntax and logic.
 {p_end}
 
@@ -56,17 +57,30 @@ The TSCB work in two stages. First, the fraction treated for each cluster is dra
 {title:Options}
 {dlgtab:Main}
 {phang}
-{opt qk}({it:#}) proportion of cluster from population. This is required.
+{opt qk}({it:#})  Indicates the proportion of clusters from the population which are
+sampled in the data. This value should be strictly greater than 0, and less than
+or equal to 1.  Values of 1 imply that all clusters are observed in the data,
+whereas values less than 1 imply that only this proportion of clusters were sampled.
+This is required. 
+
+{pstd}
+{p_end}
+ {phang}
+{opt fe} Indicates that the underlying estimator desired is a fixed effects estimator
+where the dependent variable is regressed on treatment exposure as well as {opt groupvar}
+fixed effects.  In this case, the CCV estimator defined in {help ccv##CCV:Abadie et al. (2023)}
+section V will be implemented.  If not specified, OLS regressions are implemented.
+
+{pstd}
+{p_end} 
+{phang}
+{opt seed}({it:#})  seed define for pseudo-random numbers. This ensures that variance
+estimates can be replicated exactly if desired, despite bootstrap resampling.
 
 {pstd}
 {p_end}
 {phang}
-{opt seed}({it:#}) seed define for pseudo-random numbers.
-
-{pstd}
-{p_end}
-{phang}
-{opt reps}({it:#}) repetition of bootstrap. Default is 50.
+{opt reps}({it:#}) number of repetitions used for conducting bootstrap resamples. Default is 50.
 
 {pstd}
 {p_end}
@@ -80,9 +94,10 @@ The TSCB work in two stages. First, the fraction treated for each cluster is dra
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Scalars}{p_end}
-{synopt:{cmd:e(se_ols)}}Standard error of the OLS estimator{p_end}
-{synopt:{cmd:e(se_fe)}}Standard error of the FE estimator {p_end}
-{synopt:{cmd:e(reps)}}Number of bootstrap {p_end}
+{synopt:{cmd:e(se_tscb)}}Two-Stage Cluster Bootstrap (TSCB) standard error {p_end}
+{synopt:{cmd:e(se_robust)}}Heteroskedasticity robust standard error {p_end}
+{synopt:{cmd:e(se_cluster)}}Cluster robust standard error {p_end}
+{synopt:{cmd:e(reps)}}Number of bootstrap resamples {p_end}
 {synopt:{cmd:e(N_clust)}}Number of clusters {p_end}
 
 
@@ -101,7 +116,7 @@ The TSCB work in two stages. First, the fraction treated for each cluster is dra
 {title:Examples}
 
 {pstd}
-Load data from 1% extract from 2000 US Census (20-50 years old) Abadie et al., (2020).
+Load data from 1% extract from 2000 US Census (20-50 years old) {help tscb##TSCB:Abadie et al. (2023)}.
 
 {pstd}
  . {stata webuse set www.damianclarke.net/stata/}
@@ -149,8 +164,8 @@ Using a bigger sample at 5 percent.
 {title:References}
 
 {marker TSCB}{...}
-{phang} Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge. 2022.
-{browse "https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjac038/6750017?redirectedFrom=fulltext&login=false":{it:When Should You Adjust Standard Errors for Clustering?}.} The Quarterly Journal of Economics.
+{phang} Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge (2023).
+{browse "https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjac038/6750017?redirectedFrom=fulltext&login=false":{it:When Should You Adjust Standard Errors for Clustering?}.} The Quarterly Journal of Economics, 138(1):1-35.
 {p_end}
 
 

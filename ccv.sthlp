@@ -16,6 +16,7 @@
 {synoptline}
 {synopt :{opt qk}({it:#})} proportion of clusters from population which are sampled in data.{p_end}
 {synopt :{opt pk}({it:#})} proportion of individuals from population which are sampled in data.{p_end}
+{synopt :{opt fe}} indicates that a fixed effects model is desired.{p_end}
 {synopt :{opt seed}({it:#})} set random-number seed to #.{p_end}
 {synopt :{opt reps}({it:#})} the number of sample split repetitions to increase precision of variance calculation.{p_end}
 {pstd}
@@ -30,7 +31,7 @@
 
 {pstd}
  {cmd:ccv} implements the Causal Cluster Variance (CCV) an analytic variance estimator
- proposed by {help ccv##CCV:Abadie et al. (2022)} for models where average treatment
+ proposed by {help ccv##CCV:Abadie et al. (2023)} for models where average treatment
  effects are desired, and where standard error estimates wish to account for clustering.
  The CCV is a variance estimate which considers both the standard sampling component
  which induces variance in estimated regression coefficients, but also incorporates
@@ -67,8 +68,7 @@
 
 {pstd}
  The {cmd:ccv} command is closely related to the {cmd:tscb} (Two-Stage Cluster
- Bootstrap) command.  {cmd:tscb}
- (provided that it is installed) implements a bootstrap-version of the cluster
+ Bootstrap) command. {cmd:tscb} (if installed) implements a bootstrap-version of the cluster
  variance formula of {help ccv##CCV:Abadie et al. (2022)}, and shares quite a
  similar syntax and logic.
 {p_end}
@@ -95,8 +95,16 @@ required option.
 {pstd}
 {p_end}
  {phang}
+{opt fe} Indicates that the underlying estimator desired is a fixed effects estimator
+where the dependent variable is regressed on treatment exposure as well as {opt groupvar}
+fixed effects.  In this case, the CCV estimator defined in {help ccv##CCV:Abadie et al. (2023)}
+section V will be implemented.  If not specified, OLS regressions are implemented.
+
+{pstd}
+{p_end}
+{phang}
 {opt seed}({it:#}) seed define for pseudo-random numbers. This ensures that variance
-estimates can be replicated exactly, despite that fact that certain components are
+estimates can be replicated exactly, despite the fact that certain components are
 estimated off of (random) splits to the sample.
 
 {pstd}
@@ -116,8 +124,9 @@ estimated off of (random) splits to the sample.
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Scalars}{p_end}
-{synopt:{cmd:e(se_ols)}}Standard error of the OLS estimator {p_end}
-{synopt:{cmd:e(se_fe)}}Standard error of the FE estimator {p_end}
+{synopt:{cmd:e(se_ccv)}}Causal Cluster Variance (CCV) standard error {p_end}
+{synopt:{cmd:e(se_robust)}}Heteroskedasticity robust standard error {p_end}
+{synopt:{cmd:e(se_cluster)}}Cluster robust standard error {p_end}
 {synopt:{cmd:e(reps)}}Number of sample splits {p_end}
 {synopt:{cmd:e(N_clust)}}Number of clusters {p_end}
 
@@ -137,7 +146,7 @@ estimated off of (random) splits to the sample.
 {title:Examples}
 
 {pstd}
-Load data from 1% extract from 2000 US Census (20-50 years old) Abadie et al., (2020).
+Load data from 1% extract from 2000 US Census (20-50 years old) {help ccv##CCV:Abadie et al. (2023)}.
 
 {pstd}
  . {stata webuse set www.damianclarke.net/stata/}
@@ -185,8 +194,8 @@ Using a bigger sample at 5 percent.
 {title:References}
 
 {marker CCV}{...}
-{phang} Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge. 2022.
-{browse "https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjac038/6750017?redirectedFrom=fulltext&login=false":{it:When Should You Adjust Standard Errors for Clustering?}.} The Quarterly Journal of Economics.
+{phang} Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge (2023).
+{browse "https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjac038/6750017?redirectedFrom=fulltext&login=false":{it:When Should You Adjust Standard Errors for Clustering?}.} The Quarterly Journal of Economics, 138(1):1-35.
 {p_end}
 
 
