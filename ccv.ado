@@ -31,6 +31,9 @@ tokenize `varlist'
 tempvar touse
 mark `touse' `if' `in'
 
+//CHECK IF DEPENDENT VARIABLE IS NUMERIC
+confirm numeric variable `1'
+
 //CHECK IF TREATMENT IS BINARY
 qui sum `2'
 local t_error = 0
@@ -45,7 +48,6 @@ if `t_error'==1 {
     dis as error "Please ensure that treatment variable `2' is binary."
     exit 222
 }
-//else dis "Binary check passing"
 
 //CHECK IF THERE IS VARIATION IN TREATMENT WITHIN EACH GROUP
 tempvar M
@@ -56,10 +58,6 @@ if r(min)==0 | r(max)==1 {
     di as error "Please ensure that treatment variable `2' has within-cluster variation"
     exit 222
 }
-//else dis "Within-cluster variance test passing"
-
-
-
 
 *-------------------------------------------------------------------------------
 *--- (1) Run CCV
