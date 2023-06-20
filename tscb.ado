@@ -38,6 +38,9 @@ if mod(`qm',1)!=0 {
     di as text "1/q is not an integer, so we expand the data by `f' or `qm' for each cluster"
 }
 
+//CHECK IF DEPENDENT VARIABLE IS NUMERIC 
+confirm numeric variable `1'
+
 //CHECK IF TREATMENT IS BINARY
 qui sum `2'
 local t_error = 0
