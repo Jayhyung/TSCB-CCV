@@ -15,7 +15,7 @@ For example, consider the following three circumstances, based on US Census data
 **6 PANELS OF GRAPHS:** Top two show something along the lines of Figures 1a and 1b from overleaf, middle two show variation from design where sigma_tau and sigma_k are increased a lot, and bottom two show something along the lines of Figures 4 panels (a) and (b).
 
 <img src="https://github.com/Daniel-Pailanir/tscb-ccv/blob/main/graphs/by_state.png" width="600" height="400">
-<img src="https://github.com/Daniel-Pailanir/tscb-ccv/blob/main/graphs/by_state_pk_qk.png" width="600" height="400">
+<img src="https://github.com/Daniel-Pailanir/tscb-ccv/blob/main/graphs/by_state_qk50.png" width="600" height="400">
 
 The implications of this variation for standard errors can be considerable.  In the plot below, a range of point estimates and 95% confidence intervals are displayed corresponding to simulations described in section VI of [Abadie et al (2023)](#references), where we additionally vary the proportion of clusters sampled.  Here we observe that in these cases, confidence intervals based on TSCB and Causal Cluster Variance estimates achieve good coverage with respects to the aymptotic variance of interest.  They are additionally considerably shorter than confidence intervals based on traditional (model based) cluster robust standard errors, particularly in the case when not all clusters are sampled.
 
