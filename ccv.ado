@@ -182,11 +182,20 @@ di as result %9.2f `zc' as result %8.3f `pc' "    "                     _continu
 di as result %9.7f `lci_c' "   " as result %9.7f `uci_c'
 di as text "{hline 13}{c BT}{hline 64}"
 
+qui levelsof `3'
+local rs = r(r)
+
 ereturn clear
 ereturn scalar se_ccv     = `se' 
 ereturn scalar se_robust  = `se_r' 
 ereturn scalar se_cluster = `se_cl' 
-ereturn scalar beta = `b'
+ereturn scalar reps       = `reps'
+ereturn scalar N_clust    = `rs'
+
+ereturn local cmdline  "ccv `0'"
+ereturn local clustvar "`3'"
+ereturn local depvar   "`1'"
+ereturn local cmd      "ccv"
 
 end
 
