@@ -240,14 +240,14 @@ di as text "`title'"
 di as text "`spaces'Number of obs     = " as result %10.0fc `Ntot'
 di as text "`spaces'R-squared         =  " as result  %9.4f `Rsq'
 di as text ""
-ereturn display, plus cformat(%9.7f)
-di as text " Robust SE   {c |}             " as result %9.7f `se_r'  "" _continue
+ereturn display, plus cformat(%9.3f)
+di as text " Robust SE   {c |}             " as result %9.3f `se_r'  "" _continue
 di as result %9.2f `zr' as result %8.3f `pr' "    "                     _continue
-di as result %9.7f `lci_r' "   " as result %9.7f `uci_r'
+di as result %9.3f `lci_r' "   " as result %9.3f `uci_r'
 
-di as text " Cluster SE  {c |}             " as result %9.7f `se_cl' "" _continue
+di as text " Cluster SE  {c |}             " as result %9.3f `se_cl' "" _continue
 di as result %9.2f `zc' as result %8.3f `pc' "    "                     _continue
-di as result %9.7f `lci_c' "   " as result %9.7f `uci_c'
+di as result %9.3f `lci_c' "   " as result %9.3f `uci_c'
 di as text "{hline 13}{c BT}{hline 64}"
 
 ereturn clear
