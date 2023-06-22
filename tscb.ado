@@ -254,6 +254,13 @@ ereturn clear
 ereturn scalar se_tscb    = `se' 
 ereturn scalar se_robust  = `se_r' 
 ereturn scalar se_cluster = `se_cl' 
+ereturn scalar reps       = `reps'
+ereturn scalar N_clust    = `rs'
+
+ereturn local cmdline  "tscb `0'"
+ereturn local clustvar "`3'"
+ereturn local depvar   "`1'"
+ereturn local cmd      "tscb"
 
 end
 
