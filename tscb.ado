@@ -73,7 +73,8 @@ tokenize `varlist'
 tempvar M
 qui egen `M' = group(`3') if `touse'
 
-qui levelsof `M'
+*qui levelsof `M' //this works only for Stata > 15.0 versions
+qui tab `M'
 local rs=r(r)
 local S=`rs'*`qm'
 
