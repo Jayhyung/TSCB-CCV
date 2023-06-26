@@ -42,7 +42,7 @@ if mod(`qm',1)!=0 {
 confirm numeric variable `1'
 
 //CHECK IF TREATMENT IS BINARY
-qui sum `2'
+qui sum `2' if `touse'
 local t_error = 0
 if r(min)!=0 | r(max)!=1 {
     local t_error = 1
@@ -74,8 +74,8 @@ tempvar M
 qui egen `M' = group(`3') if `touse'
 
 *qui levelsof `M' //this works only for Stata > 15.0 versions
-qui tab `M'
-local rs=r(r)
+qui sum `M'
+local rs=r(max)
 local S=`rs'*`qm'
 
 mata: States = J(`S',1,NULL)

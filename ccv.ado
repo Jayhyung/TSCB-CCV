@@ -35,7 +35,7 @@ mark `touse' `if' `in'
 confirm numeric variable `1'
 
 //CHECK IF TREATMENT IS BINARY
-qui sum `2'
+qui sum `2' if `touse'
 local t_error = 0
 if r(min)!=0 | r(max)!=1 {
     local t_error = 1
@@ -182,8 +182,10 @@ di as result %9.2f `zc' as result %8.3f `pc' "    "                     _continu
 di as result %9.3f `lci_c' "   " as result %9.3f `uci_c'
 di as text "{hline 13}{c BT}{hline 64}"
 
-qui levelsof `3'
-local rs = r(r)
+tempvar M
+qui egen `M' = group(`3') if `touse'
+qui sum `M'
+local rs=r(max)
 
 ereturn clear
 ereturn scalar se_ccv     = `se' 
