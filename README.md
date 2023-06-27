@@ -38,7 +38,7 @@ net install tscb, from("https://raw.githubusercontent.com/daniel-pailanir/tscb-c
 tscb Y W M [if] [in], qk() seed() reps() fe
 ```
 
-Where Y is an outcome variable, W a binary treatment variable and M is a variable indicating the group over which clustering is calculated. We provide an example based on the 2000 US Census, discussed in the introduction of [Abadie et al (2023)](#references).
+Where Y is an outcome variable, W a binary treatment variable and M is a variable indicating the group over which clustering is calculated.  The option `qk()` is required, and must take values between 0 and 1 indicating the proportion of clusters sampled (1 implies all clustered are sampled).  We provide an example based on the 2000 US Census, discussed in the introduction of [Abadie et al (2023)](#references).
 
 ### OLS Estimates 
 ```s
@@ -86,7 +86,7 @@ net install ccv, from("https://raw.githubusercontent.com/daniel-pailanir/tscb-cc
 ccv Y W M [if] [in], qk() pk() seed() reps() fe
 ```
 
-Where Y is an outcome variable, W a binary treatment variable and M a variable indicating the group over which clustering is calculated.  Below, an example is provided using the 5% sample of the 2000 US Census, described in the introduction of Abadie et al. (2023).
+Where Y is an outcome variable, W a binary treatment variable and M a variable indicating the group over which clustering is calculated.  The options `qk()` and `pk()` are required, and must take values between 0 and 1 indicating, respectively, the proportion of clusters sampled (1 implies all clustered are sampled) and the proportion of individuals sampled within clusters. Below, an example is provided using the 5% sample of the 2000 US Census, described in the introduction of Abadie et al. (2023).
 
 ### OLS Estimates
 ```s
