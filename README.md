@@ -118,6 +118,6 @@ OLS regression with Causal Cluster Variance
 ```
 
 ## References
-**When Should You Adjust Standard Errors for Clustering?**, Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge, The Quarterly Journal of Economics, 138(1):1-35, 2023.
+**[When Should You Adjust Standard Errors for Clustering?](https://doi.org/10.1093/qje/qjac038)**, Alberto Abadie, Susan Athey, Guido W Imbens, Jeffrey M Wooldridge, *The Quarterly Journal of Economics*, 138(1):1-35, 2023.
 
 
