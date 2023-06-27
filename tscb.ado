@@ -1,5 +1,5 @@
 *! tscb: Two-Stage Cluster Bootstrap (Abadie et al., 2022) Implementation
-*! Version 1.0.0 november6, 2022
+*! Version 1.0.0 november 6, 2022
 *! dpailanir@fen.uchile.cl, dclarke@fen.uchile.cl
 
 /*
@@ -57,14 +57,15 @@ if `t_error'==1 {
 }
 
 //CHECK IF THERE IS VARIATION IN TREATMENT WITHIN EACH GROUP
-tempvar M
-qui bys `3': egen `M' = mean(`2') if `touse'
-qui sum `M' if `touse'
+tempvar V
+qui bys `3': egen `V' = mean(`2') if `touse'
+qui sum `V' if `touse'
 if r(min)==0 | r(max)==1 {
     di as error "Not all clusters have variance in treatment."
     di as error "Please ensure that treatment variable `2' has within-cluster variation"
     exit 222
 }
+drop `V'
 
 *------------------------------------------------------------------------------*
 * (1) Run TSCB

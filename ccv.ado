@@ -182,10 +182,8 @@ di as result %9.2f `zc' as result %8.3f `pc' "    "                     _continu
 di as result %9.3f `lci_c' "   " as result %9.3f `uci_c'
 di as text "{hline 13}{c BT}{hline 64}"
 
-tempvar M
-qui egen `M' = group(`3') if `touse'
-qui sum `M'
-local rs=r(max)
+qui tab `3'
+local rs=r(r)
 
 ereturn clear
 ereturn scalar se_ccv     = `se' 
