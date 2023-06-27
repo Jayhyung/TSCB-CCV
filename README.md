@@ -15,14 +15,14 @@ For example, consider the following two circumstances, based on US Census data a
 <img src="https://github.com/Daniel-Pailanir/tscb-ccv/blob/main/graphs/by_state.png" width="600" height="400">
 <img src="https://github.com/Daniel-Pailanir/tscb-ccv/blob/main/graphs/by_state_qk50.png" width="600" height="400">
 
-The implications of this variation for standard errors can be considerable.  In the plot below, a range of point estimates and 95% confidence intervals are displayed corresponding to simulations described in section VI of [Abadie et al (2023)](#references), where we additionally vary the proportion of clusters sampled.  Here we observe that in these cases, confidence intervals based on TSCB and Causal Cluster Variance estimates achieve good coverage with respects to the aymptotic variance of interest.  They are additionally considerably shorter than confidence intervals based on traditional (model based) cluster robust standard errors, particularly in the case when not all clusters are sampled.
+The implications of this variation for standard errors can be considerable.  In the plot below, a range of point estimates and 95% confidence intervals are displayed corresponding to simulations described in section VI of [Abadie et al (2023)](#references), where we additionally vary the proportion of clusters sampled.  Here we observe that in these cases, confidence intervals based on TSCB and Causal Cluster Variance estimates achieve good coverage with regards to the aymptotic variance of interest.  They are additionally considerably shorter than confidence intervals based on traditional (model based) cluster robust standard errors, particularly in the case when not all clusters are sampled.
 
 <img src="https://github.com/Daniel-Pailanir/tscb-ccv/blob/main/graphs/se_graph_50.png" width="600" height="400">
 
 The **Causal Cluster Variance** estimator is a closed-form variance estimate for treatment effects which is based on a refinement to the standard cluster-robust variance estimator.  The computational implementation of this estimator follows equation (13) of [Abadie et al (2023)](#references) in cases where all clusters are sampled, or equation (14) in cases where all clusters are not sampled.
 The **Two-Stage Cluster Bootstrap** estimator is a bootstrap-based variance estimator for treatment effects where bootstrap resamples have alternative treatment assignment probabilities than in the original sample, while allowing for the case where a large fraction of clusters are observed.  The comuptational implementation of this estimator follows Algorithm 1 of [Abadie et al (2023)](#references).
 
-Both cases additionally admit for fixed effects estimators, following section V of [Abadie et al (2023)](#references).  Details on code installation and implementation are below, with full documentation available in help files installed with the programs.
+Both cases additionally admit for fixed effects estimators, following section V of [Abadie et al (2023)](#references).  Details on code installation and implementation are below, with full documentation available in help files installed with the programs (typing `help tscb` or `help ccv` in Stata).
 
 
 ## TSCB: Two-Stage Cluster Bootstrap
