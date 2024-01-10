@@ -76,6 +76,7 @@
 
 {marker options}{...}
 {title:Options}
+{dlgtab:Main}
 {phang}
 {opt qk}({it:#}) Indicates the proportion of clusters from the population which are
 sampled in the data. This value should be strictly greater than 0, and less than
