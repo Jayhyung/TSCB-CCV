@@ -170,5 +170,13 @@ Using a bigger sample at 5 percent.
 
 
 {title:Author}
+Damian Clarke, Universidad de Chile.
+Email {browse "mailto:dclarke@fen.uchile.cl":dclarke@fen.uchile.cl}
+Website {browse "http://www.damianclarke.net/"}
 
+Daniel Pailañir, Universidad de Chile.
+Email {browse "mailto:dpailanir@fen.uchile.cl":dpailanir@fen.uchile.cl}
+Website {browse "https://daniel-pailanir.github.io/"}
 
+{title:Website}
+{cmd:tscb} is maintained at {browse "https://github.com/Daniel-Pailanir/TSCB-CCV": https://github.com/Daniel-Pailanir/TSCB-CCV} 
