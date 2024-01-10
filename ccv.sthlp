@@ -209,4 +209,4 @@ Email {browse "mailto:dpailanir@fen.uchile.cl":dpailanir@fen.uchile.cl}
 Website {browse "https://daniel-pailanir.github.io/"}
 
 {title:Website}
-{cmd:sdid} is maintained at {browse "https://github.com/Daniel-Pailanir/TSCB-CCV": https://github.com/Daniel-Pailanir/TSCB-CCV} 
+{cmd:ccv} is maintained at {browse "https://github.com/Daniel-Pailanir/TSCB-CCV": https://github.com/Daniel-Pailanir/TSCB-CCV} 
