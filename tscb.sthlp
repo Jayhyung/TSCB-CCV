@@ -94,19 +94,20 @@ estimates can be replicated exactly if desired, despite bootstrap resampling.
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Scalars}{p_end}
+{synopt:{cmd:e(beta)}}Beta estimator {p_end}
 {synopt:{cmd:e(se_tscb)}}Two-Stage Cluster Bootstrap (TSCB) standard error {p_end}
 {synopt:{cmd:e(se_robust)}}Heteroskedasticity robust standard error {p_end}
 {synopt:{cmd:e(se_cluster)}}Cluster robust standard error {p_end}
 {synopt:{cmd:e(reps)}}Number of bootstrap resamples {p_end}
-{synopt:{cmd:e(N_clust)}}Number of clusters {p_end}
+{synopt:{cmd:e(N_clust)}}Number of units (groups) observed in the original panel {p_end}
 
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Macros}{p_end} 
-{synopt:{cmd:e(cmd)}}tscb{p_end}
-{synopt:{cmd:e(cmdline)}}command as typed{p_end}
-{synopt:{cmd:e(depvar)}}name of dependent variable{p_end}
-{synopt:{cmd:e(clustvar)}}name of cluster variable{p_end}
+{synopt:{cmd:e(cmd)}}Returns command name (tscb){p_end}
+{synopt:{cmd:e(cmdline)}}Returns command as typed {p_end}
+{synopt:{cmd:e(depvar)}}Lists name of dependent variable {p_end}
+{synopt:{cmd:e(clustvar)}}Provides the name of the unit (group) variable {p_end}
 
 
 {pstd}
