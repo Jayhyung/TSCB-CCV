@@ -186,6 +186,7 @@ qui tab `3'
 local rs=r(r)
 
 ereturn clear
+ereturn scalar beta       = `b'
 ereturn scalar se_ccv     = `se' 
 ereturn scalar se_robust  = `se_r' 
 ereturn scalar se_cluster = `se_cl' 
