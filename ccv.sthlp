@@ -125,6 +125,7 @@ estimated off of (random) splits to the sample.
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Scalars}{p_end}
+{synopt:{cmd:e(beta)}}Beta estimator {p_end}
 {synopt:{cmd:e(se_ccv)}}Causal Cluster Variance (CCV) standard error {p_end}
 {synopt:{cmd:e(se_robust)}}Heteroskedasticity robust standard error {p_end}
 {synopt:{cmd:e(se_cluster)}}Cluster robust standard error {p_end}
