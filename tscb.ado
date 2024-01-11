@@ -253,6 +253,7 @@ di as result %9.3f `lci_c' "   " as result %9.3f `uci_c'
 di as text "{hline 13}{c BT}{hline 64}"
 
 ereturn clear
+ereturn scalar beta       = `b'
 ereturn scalar se_tscb    = `se' 
 ereturn scalar se_robust  = `se_r' 
 ereturn scalar se_cluster = `se_cl' 
