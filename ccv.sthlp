@@ -130,15 +130,15 @@ estimated off of (random) splits to the sample.
 {synopt:{cmd:e(se_robust)}}Heteroskedasticity robust standard error {p_end}
 {synopt:{cmd:e(se_cluster)}}Cluster robust standard error {p_end}
 {synopt:{cmd:e(reps)}}Number of sample splits {p_end}
-{synopt:{cmd:e(N_clust)}}Number of clusters {p_end}
+{synopt:{cmd:e(N_clust)}}Number of units (groups) observed in the original panel {p_end}
 
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Macros}{p_end}
-{synopt:{cmd:e(cmd)}}ccv{p_end}
-{synopt:{cmd:e(cmdline)}}command as typed{p_end}
-{synopt:{cmd:e(depvar)}}name of dependent variable{p_end}
-{synopt:{cmd:e(clustvar)}}name of cluster variable{p_end}
+{synopt:{cmd:e(cmd)}}Returns command name (ccv) {p_end}
+{synopt:{cmd:e(cmdline)}}Returns command as typed {p_end}
+{synopt:{cmd:e(depvar)}}Lists name of dependent variable {p_end}
+{synopt:{cmd:e(clustvar)}}Provides the name of the unit (group) variable {p_end}
 
 
 {pstd}
