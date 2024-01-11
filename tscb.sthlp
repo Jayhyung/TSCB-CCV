@@ -103,7 +103,7 @@ estimates can be replicated exactly if desired, despite bootstrap resampling.
 
 
 {synoptset 20 tabbed}{...}
-{p2col 5 20 24 2: Macros}{p_end} 
+{p2col 5 20 24 2: Macros}{p_end}
 {synopt:{cmd:e(cmd)}}Returns command name (tscb){p_end}
 {synopt:{cmd:e(cmdline)}}Returns command as typed {p_end}
 {synopt:{cmd:e(depvar)}}Lists name of dependent variable {p_end}
