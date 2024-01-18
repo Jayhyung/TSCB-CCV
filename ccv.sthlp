@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{opt ccv} {opt depvar} {opt treatment} {opt groupvar} {ifin}{cmd:,} {it:qk() pk()} [{it:options}]
+{opt ccv} {opt depvar} {opt treatment} {opt groupvar} {ifin}{cmd:,} {it:qk(#) pk(#)} [{it:options}]
 
 {synoptset 10 tabbed}{...}
 {synopthdr}
