@@ -11,7 +11,7 @@
 {p 4 4 2}
 {opt tscb} {opt depvar} {opt treatment} {opt groupvar} {ifin}{cmd:,} {it:qk(#)} [{it:options}]
 
-{synoptset 29 tabbed}{...}
+{synoptset 10 tabbed}{...}
 {synopthdr}
 {synoptline}
 {synopt :{opt qk}({it:#})} proportion of cluster from population.{p_end}
