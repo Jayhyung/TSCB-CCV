@@ -94,7 +94,7 @@ estimates can be replicated exactly if desired, despite bootstrap resampling.
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Scalars}{p_end}
-{synopt:{cmd:e(beta)}}Beta estimator {p_end}
+{synopt:{cmd:e(ATE)}}Average Treatment Effect {p_end}
 {synopt:{cmd:e(se_tscb)}}Two-Stage Cluster Bootstrap (TSCB) standard error {p_end}
 {synopt:{cmd:e(se_robust)}}Heteroskedasticity robust standard error {p_end}
 {synopt:{cmd:e(se_cluster)}}Cluster robust standard error {p_end}
