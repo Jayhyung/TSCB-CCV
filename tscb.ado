@@ -1,9 +1,9 @@
-*! tscb: Two-Stage Cluster Bootstrap (Abadie et al., 2022) Implementation
-*! Version 1.0.0 november 6, 2022
+*! tscb: Two-Stage Cluster Bootstrap (Abadie et al., 2023) Implementation
+*! Version 1.0.0 January 28, 2024
 *! dpailanir@fen.uchile.cl, dclarke@fen.uchile.cl
 
 /*
-Versions: add if/in and create unique id in tscb
+Version 1.0.0: First version on SSC (Jan 28, 2024)
 */
 
 cap program drop tscb 
@@ -118,7 +118,7 @@ while `b'<=`reps' {
     //select Wmean randomly
     mata: Data2 = NewData(Data,W,`S')
 		
-    //array para los clusters sampleados SST=Treated, SSU=Untreated, SS=T+U
+    //array for sampled clusters SST=Treated, SSU=Untreated, SS=T+U
     mata: SST  = J(`S',1,NULL) 
     mata: SSU  = J(`S',1,NULL) 
     mata: SS   = J(`S',1,NULL) 
@@ -143,7 +143,7 @@ while `b'<=`reps' {
     }
 
     forval i=1/`upperS' {		
-        //base para la regresion
+        //base for regression
         mata: i=newi[`i',1]
         mata: SS[`i']=SSample(Data2, States, SST, SSU, i)
         mata: SSTU=(SSTU\(*SS[`i']))
@@ -297,7 +297,7 @@ mata:
     matauxU=(*States[i])[selectindex((*States[i])[,3]:==0),]
     SSU[i]=&(matauxU[indexU[,1],])
 		
-    //append de tratados y no tratados por cada estado
+    //append treated to un-treated in each state
     SS=&((*SST[i])\(*SSU[i]))
 	
     return(SS)

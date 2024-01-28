@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.0.0 November 15, 2022}
+{* *! version 1.0.0 28 January, 2024}
 {title:Title}
 
 {p 4 4 2}
@@ -14,7 +14,7 @@
 {synoptset 10 tabbed}{...}
 {synopthdr}
 {synoptline}
-{synopt :{opt qk}({it:#})} proportion of cluster from population.{p_end}
+{synopt :{opt qk}({it:#})} proportion of clusters sampled from population.{p_end}
 {synopt :{opt fe}} indicates that a fixed effects model is desired.{p_end}
 {synopt :{opt seed}({it:#})} set random-number seed to #.{p_end}
 {synopt :{opt reps}({it:#})} repetitions for bootstrap.{p_end}
@@ -41,7 +41,15 @@
 {p_end}
 
 {pstd}
-The TSCB work in two stages. First, the fraction treated for each cluster is drawn from empirical distribution of cluster-specific treatment fraction. Second, we samples the treated and control units from each cluster, with their number of units determined in the first stage. The algorithm is explained in detail in {help tscb##TSCB:Abadie et al. (2023)}.
+This procedure assumes that some {help depvar} should be regressed on some {help varname:treatment} variable, and the estimand of interest is the average treatment effect. The population is assumed partitioned into clusters,
+indicated by {help varname:groupvar}.
+By default, {cmd:tscb} is based on a standard linear regression of {help depvar} on {help varname:groupvar}, though regressions also including {help varname:groupvar} fixed effects can be requested if desired.
+{p_end}
+
+{pstd}
+The TSCB procedure works in two stages. First, the fraction of treated units for each cluster is drawn from the empirical distribution of cluster-specific treatment fractions.
+Second, treatment and control units are resampled from each cluster, with the number of units determined in the first stage.
+The TSCB algorithm is explained in detail in {help tscb##TSCB:Abadie et al. (2023)}; refer in particular to their Algorithm 1.  
 {p_end}
 
 {pstd}
@@ -49,9 +57,13 @@ The TSCB work in two stages. First, the fraction treated for each cluster is dra
    Variance) command.  {cmd:ccv}
    (if installed) implements an analytic version of the cluster
    variance formula of {help tscb##TSCB:Abadie et al. (2023)}, and shares quite a
-   similar syntax and logic.
+   similar syntax and logic.  {cmd:tscb} requires the user-written {cmd:moremata} command,
+   and this should be {help ssc install:installed from the SSC} prior to running {cmd:tscb}.
 {p_end}
 
+{pstd}
+Some further details related to this command can be found on an accompanying github page located at {browse "https://github.com/Daniel-Pailanir/TSCB-CCV"}.
+{p_end}
 
 {marker options}{...}
 {title:Options}
@@ -61,26 +73,28 @@ The TSCB work in two stages. First, the fraction treated for each cluster is dra
 sampled in the data. This value should be strictly greater than 0, and less than
 or equal to 1.  Values of 1 imply that all clusters are observed in the data,
 whereas values less than 1 imply that only this proportion of clusters were sampled.
-This is required. 
+This is required.  For example, if clusters are states in a country, and observations
+exist in data from each state, qk should be set as 1.
 
 {pstd}
 {p_end}
  {phang}
 {opt fe} Indicates that the underlying estimator desired is a fixed effects estimator
 where the dependent variable is regressed on treatment exposure as well as {opt groupvar}
-fixed effects.  In this case, the CCV estimator defined in {help ccv##CCV:Abadie et al. (2023)}
-section V will be implemented.  If not specified, OLS regressions are implemented.
+fixed effects.
+In this case, the CCV estimator defined in {help ccv##CCV:Abadie et al. (2023)}
+section V will be implemented.  If not specified, bivariate OLS regression is estimated.
 
 {pstd}
 {p_end} 
 {phang}
-{opt seed}({it:#})  seed define for pseudo-random numbers. This ensures that variance
+{opt seed}({it:#}) Set seed for pseudo-random number generation. This ensures that variance
 estimates can be replicated exactly if desired, despite bootstrap resampling.
 
 {pstd}
 {p_end}
 {phang}
-{opt reps}({it:#}) number of repetitions used for conducting bootstrap resamples. Default is 50.
+{opt reps}({it:#}) Indicates the number of repetitions used for conducting bootstrap resamples. Default is 50.
 
 {pstd}
 {p_end}
