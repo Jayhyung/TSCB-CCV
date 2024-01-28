@@ -1,9 +1,9 @@
 {smcl}
-{* *! version 1.0.0 November 15, 2022}
+{* *! version 1.0.0 January 28, 2024}
 {title:Title}
 
 {p 4 4 2}
-{cmdab:ccv} {hline 2} The Causal Cluster Variance Estimator for Stata
+{cmdab:ccv} {hline 2} The Causal Cluster Variance Estimator 
 
 {marker syntax}{...}
 {title:Syntax}
@@ -47,7 +47,7 @@
 {p_end}
 
 {pstd}
-  Following the details laid out fully in {help ccv##CCV:Abadie et al. (2022)}, the CCV is 
+  Following the details laid out fully in {help ccv##CCV:Abadie et al. (2023)}, the CCV is 
   suitable for OLS regressions of an outcome on a single (binary) treatment variable, or
   for OLS regressions of an outcome variable on a single (binary) treatment variable, as
   well as unit fixed effects.  The estimation of the variance requires estimating various
@@ -69,10 +69,14 @@
 {pstd}
  The {cmd:ccv} command is closely related to the {cmd:tscb} (Two-Stage Cluster
  Bootstrap) command. {cmd:tscb} (if installed) implements a bootstrap-version of the cluster
- variance formula of {help ccv##CCV:Abadie et al. (2022)}, and shares quite a
- similar syntax and logic.
+ variance formula of {help ccv##CCV:Abadie et al. (2023)}, and shares quite a
+ similar syntax and logic.  {cmd:ccv} requires the user-written {cmd:moremata} command,
+ and this should be {help ssc install:installed from the SSC} prior to running {cmd:ccv}.
 {p_end}
 
+{pstd}
+Some further details related to this command can be found on an accompanying github page located at {browse "https://github.com/Daniel-Pailanir/TSCB-CCV"}.
+{p_end}
 
 {marker options}{...}
 {title:Options}
@@ -111,7 +115,7 @@ estimated off of (random) splits to the sample.
 {pstd}
 {p_end}
 {phang}
-{opt reps}({it:#}) repetition of sample splits. Default is 4.
+{opt reps}({it:#}) The number of sample splits to be conducted to estimate variance components (refer to {help ccv##CCV:Abadie et al. (2023, section IV.A)} for details). Default is 4.
 
 {pstd}
 {p_end}
