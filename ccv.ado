@@ -1,17 +1,17 @@
-*! ccv: Causal Cluster Variance (Abadie et al., 2022) Implementation
-*! Version 0.0.0 november7, 2022
+*! ccv: Causal Cluster Variance (Abadie et al., 2023) Implementation
+*! Version 1.0.0 January 28, 2024
 *! dpailanir@fen.uchile.cl, dclarke@fen.uchile.cl
 
 /*
-Versions: 0.0.1 november14 - add if/in and create unique id in ccv
-Versions: 0.0.2 november21 - add FE option and return results
+Versions: 0.0.1 november14   - add if/in and create unique id in ccv
+        : 0.0.2 november21   - add FE option and return results
+        : 1.0.0 Jan 28, 2024 - SSC first version
 */
 
 
 cap program drop ccv
 program ccv, eclass
 version 13.0
-
 
 #delimit ;
     syntax varlist(min=3 max=3) [if] [in],
@@ -207,7 +207,7 @@ mata:
 real scalar CCV(vector Y, vector W, vector M, vector u, scalar pk, scalar qk) {
     // u is split variable: 1 if estimation, 0 if calculate    
     //Calculate alpha and tau for split 1
-    //[NEED TO CONFIRM IF FASTER TO JUST SELECT SUB-VECTORS!]
+    //[CONFIRM IF FASTER TO JUST SELECT SUB-VECTORS]
     alpha = sum(Y:*(1:-W):*(1:-u))/sum((1:-W):*(1:-u))
     tau = sum(Y:*(W):*(1:-u))/sum((W):*(1:-u)) - alpha
     // Calculate tau for full sample
@@ -270,7 +270,7 @@ real scalar CCV(vector Y, vector W, vector M, vector u, scalar pk, scalar qk) {
     }
 	
     V_CCV = sum_CCV/n
-	
+
     // Place-holder
     return(V_CCV)
 }
