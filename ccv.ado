@@ -81,8 +81,11 @@ if "`fe'"=="fe" {
     mata: r_V = Ntot*(tildes[1,1]/tildes[3,1]^2)
     mata: se_r = sqrt(r_V)/sqrt(Ntot)
     mata: st_local("se_r", strofreal(se_r))
+    mata: Mk = rows(uniqrows(data[,3]))
+    mata: K = Mk+1+1 
+    mata: C  = sqrt(Mk/(Mk-1)*(Ntot-1)/(Ntot-K))
     mata: cluster_V = Ntot*(tildes[2,1]/tildes[3,1]^2)
-    mata: se_cl = sqrt(cluster_V)/sqrt(Ntot)
+    mata: se_cl = C*sqrt(cluster_V)/sqrt(Ntot)
     mata: st_local("se_cl", strofreal(se_cl))
 
     // adjust for qk<1 OLS
@@ -125,9 +128,11 @@ else {
     mata: st_local("b", strofreal(b))
 
     // cluster SE OLS
+    mata: Mk = rows(uniqrows(data[,3]))
+    mata: C  = sqrt(Mk/(Mk-1)*(Ntot-1)/(Ntot-2))
     mata: cluster_V = cluster_SE(Uhat, data[,2], data[,3], Wbar)
     mata: cluster_V = cluster_V/(Ntot*wbar_factor)
-    mata: se_cl = sqrt(cluster_V)/sqrt(Ntot)
+    mata: se_cl = C*sqrt(cluster_V)/sqrt(Ntot)
     mata: st_local("se_cl", strofreal(se_cl))
 
     // adjust for qk<1 OLS
